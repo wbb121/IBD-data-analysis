@@ -13,6 +13,7 @@
 metadata <- read.csv("metadata.csv",row.names=1)
 
 # genus level abundance of 16S rRNA
+require(qiime2R)
 amplicon_genus_table <- as.data.frame(read_qza("./qiime2/table-l6.qza")$data)
 colnames(amplicon_genus_table) <- gsub("^s","",colnames(amplicon_genus_table))
 amplicon_genus_table <- amplicon_genus_table[,which(colnames(amplicon_genus_table)%in%metadata$SampleID)]
@@ -77,7 +78,7 @@ ggarrange(amplicon_genus_rarefaction,shotgun_subspecies_rarefaction,nrow=1,ncol=
 ###### rarefy the samples at different rarefaction levels ######
 # randomly rarefied our samples at different rarefaction levels 100 times. 
 # If the number of reads in a sample is less than the rarefaction level, we directly use all the reads.
-# This was done using the ¡®feature-table rarefy¡¯ command in qiime2.
+# This was done using the 'feature-table rarefy' command in qiime2.
 
 ###### function for getting the rarefaction genus count table ######
 compute.rarefaction.table <- function(original_table,rarefaction_level){
@@ -99,7 +100,7 @@ compute.rarefaction.table <- function(original_table,rarefaction_level){
   
   # perform rarefaction 100 times
   for(i in 1:100){
-    filename <- paste0("E:/USC/IBD/20210614_analysis/data_from_server/table_l6_rarefaction/table_l6_rarefy_",rarefaction_level,"_",i,".qza")
+    filename <- paste0("./qiime2/table_l6_rarefaction/table_l6_rarefy_",rarefaction_level,"_",i,".qza")
     df <- as.data.frame(read_qza(filename)$data)
     # uniform the format of the rarefied table, make them have the same features
     features_not_included <- features_all[-which(features_all%in%rownames(df))]
